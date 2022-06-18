@@ -1,19 +1,74 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
+import axios from "axios";
+import isEmail from "validator/es/lib/isEmail";
 
 const Contact = () => {
-  return <h4>contact section</h4>
+    const [isLoading, setIsLoading] = useState(false)
+    const [email, setEmail] = useState('')
+    const [error, setError] = useState({show: false, message: ''})
+    const [success, setSuccess] = useState({show: false, message: ''})
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError({show: false, message: ''})
+        setSuccess({show: false, message: ''})
+        try {
+            if (!email || !isEmail(email, {ignore_whitespace: false})) {
+                setError({show: true, message: 'Valid email is required'})
+                return;
+            }
+            setIsLoading(true)
+            await axios.post('https://formspree.io/f/mjvldbjl', {
+                email
+            }, {
+                'Accept': 'application/json'
+            })
+            setEmail('')
+            setSuccess({show: true, message: 'Thanks for joining'})
+        } catch (e) {
+            setError({show: true, message: e.response.message})
+        }
+        setIsLoading(false);
+    }
+
+    return (
+        <Wrapper>
+            <div className="section-center">
+                <h3>Join our newsletter and get 20% off</h3>
+                <div className='content'>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam architecto asperiores
+                        aspernatur aut autem consectetur, deleniti et libero natus, nemo nobis numquam quae quia quis
+                        quos recusandae ullam velit voluptate?
+                    </p>
+                    <form onSubmit={handleSubmit}>
+                        <div className='contact-form'>
+                            <input id='email' type="text" name='email' className='form-input' placeholder='enter email'
+                                   value={email} onChange={(e) => setEmail(e.target.value)}/>
+                            <button type='submit' className='submit-btn' disabled={isLoading}>subscribe</button>
+                        </div>
+                        {error.show && <p style={{textAlign: 'center', color: 'red'}}>{error.message}</p>}
+                        {success.show && <p style={{textAlign: 'center'}}>{success.message}</p>}
+                    </form>
+                </div>
+            </div>
+        </Wrapper>
+    )
 }
 const Wrapper = styled.section`
   padding: 5rem 0;
+
   h3 {
     text-transform: none;
   }
+
   p {
     line-height: 2;
     max-width: 45em;
     color: var(--clr-grey-5);
   }
+
   .contact-form {
     width: 90vw;
     max-width: 500px;
@@ -27,20 +82,24 @@ const Wrapper = styled.section`
     padding: 0.5rem 1rem;
     border: 2px solid var(--clr-black);
   }
+
   .form-input {
     border-right: none;
     color: var(--clr-grey-3);
     border-top-left-radius: var(--radius);
     border-bottom-left-radius: var(--radius);
   }
+
   .submit-btn {
     border-top-right-radius: var(--radius);
     border-bottom-right-radius: var(--radius);
   }
+
   .form-input::placeholder {
     color: var(--clr-black);
     text-transform: capitalize;
   }
+
   .submit-btn {
     background: var(--clr-primary-5);
     text-transform: capitalize;
@@ -49,9 +108,11 @@ const Wrapper = styled.section`
     transition: var(--transition);
     color: var(--clr-black);
   }
+
   .submit-btn:hover {
     color: var(--clr-white);
   }
+
   @media (min-width: 992px) {
     .content {
       display: grid;
@@ -60,6 +121,7 @@ const Wrapper = styled.section`
       gap: 8rem;
       margin-top: 2rem;
     }
+
     p {
       margin-bottom: 0;
     }
