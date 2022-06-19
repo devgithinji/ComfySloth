@@ -6,6 +6,7 @@ import {useCartContext} from '../context/cart_context'
 import AmountButtons from './AmountButtons'
 
 const AddToCart = ({product}) => {
+    const {addToCart} = useCartContext();
     const {id, stock, colors} = product
     const [mainColor, setMainColor] = useState(colors[0]);
     const [amount, setAmount] = useState(1)
@@ -30,31 +31,26 @@ const AddToCart = ({product}) => {
         })
     }
 
-    return (
-        <Wrapper>
+    return (<Wrapper>
             <div className='colors'>
                 <span>colors: </span>
-                <div>{
-                    colors.map((color, index) => {
-                        return (
-                            <button
-                                key={index}
-                                className={`${mainColor === color ? 'color-btn active' : 'color-btn'}`}
-                                style={{background: color}}
-                                onClick={() => setMainColor(color)}
-                            >
-                                {mainColor === color ? <FaCheck/> : null}
-                            </button>
-                        )
-                    })
-                }</div>
+                <div>{colors.map((color, index) => {
+                    return (<button
+                            key={index}
+                            className={`${mainColor === color ? 'color-btn active' : 'color-btn'}`}
+                            style={{background: color}}
+                            onClick={() => setMainColor(color)}
+                        >
+                            {mainColor === color ? <FaCheck/> : null}
+                        </button>)
+                })}</div>
             </div>
             <div className='btn-container'>
                 <AmountButtons amount={amount} increase={increase} decrease={decrease}/>
-                <Link to='/cart' className='btn'>add to cart</Link>
+                <Link to='/cart' className='btn' onClick={() => addToCart({id, color: mainColor, amount, product})}>add
+                    to cart</Link>
             </div>
-        </Wrapper>
-    )
+        </Wrapper>)
 }
 
 const Wrapper = styled.section`
