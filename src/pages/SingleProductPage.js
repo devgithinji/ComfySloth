@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
-import {useParams, useHistory} from 'react-router-dom'
+import {useParams, useNavigate} from 'react-router-dom'
 import {useProductsContext} from '../context/products_context'
-import {single_product_url, single_product_url as url} from '../utils/constants'
+import {single_product_url as url} from '../utils/constants'
 import {formatPrice} from '../utils/helpers'
 import {
     Loading,
@@ -16,7 +16,7 @@ import {Link} from 'react-router-dom'
 
 const SingleProductPage = () => {
     const {id} = useParams();
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         single_product_loading: loading,
         single_product_error: error,
@@ -26,15 +26,17 @@ const SingleProductPage = () => {
 
 
     useEffect(() => {
-        fetchSingleProduct(`${single_product_url}${id}`)
+        fetchSingleProduct(`${url}${id}`)
+        // eslint-disable-next-line
     }, [id])
 
     useEffect(() => {
         if (error) {
             setTimeout(() => {
-                history.push('/')
+                navigate('/')
             }, 3000)
         }
+        // eslint-disable-next-line
     }, [error])
 
     if (loading) {
