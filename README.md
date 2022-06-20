@@ -1,3 +1,9 @@
+# Comfy Sloth
+
+Furniture Ecommerce application developed in React js.
+
+Click [here](https://comfy-sloth-ke.netlify.app) to visit application
+
 ## Notes
 
 #### Older React Version
@@ -20,3 +26,6 @@
 
 .env file in the root
 FAST_REFRESH=FALSE
+
+
+Dennis Githinji 👍
